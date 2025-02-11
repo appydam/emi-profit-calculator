@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { PiggyBank, Home, Percent, DollarSign } from "lucide-react";
+import { PiggyBank, Home, Percent, DollarSign, Clock } from "lucide-react";
 import {
   calculateEMI,
   calculatePropertyAppreciation,
@@ -18,6 +18,7 @@ const EMICalculator = () => {
   const [loanAmount, setLoanAmount] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [appreciationRate, setAppreciationRate] = useState("");
+  const [years, setYears] = useState("");
   const [results, setResults] = useState<any[]>([]);
 
   const calculateResults = () => {
@@ -25,24 +26,18 @@ const EMICalculator = () => {
     const loan = Number(loanAmount);
     const interest = Number(interestRate);
     const appreciation = Number(appreciationRate);
+    const numYears = Number(years);
     const fees = calculateFees(price);
     const totalFees = Object.values(fees).reduce((a, b) => a + b, 0);
     const totalInvestment = price + totalFees;
 
-    const yearsToCalculate = [2, 3, 5];
-    const newResults = yearsToCalculate.map((year) => {
-      const futurePrice = calculatePropertyAppreciation(price, appreciation, year);
-      const { emiPaid, loanBalance } = calculateLoanDetails(loan, interest, 20, year);
-      const profitMade = futurePrice - (totalInvestment + emiPaid);
+    if (numYears <= 0) return;
 
-      return {
-        year,
-        futurePrice,
-        emiPaid,
-        loanBalance,
-        profitMade,
-      };
-    });
+    const newResults = [{
+      year: numYears,
+      futurePrice: calculatePropertyAppreciation(price, appreciation, numYears),
+      ...calculateLoanDetails(loan, interest, 20, numYears),
+    }];
 
     setResults(newResults);
   };
@@ -112,6 +107,20 @@ const EMICalculator = () => {
                 />
               </div>
             </div>
+
+            <div className="space-y-4">
+              <Label className="text-sm font-medium">Number of Years</Label>
+              <div className="relative">
+                <Clock className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
+                <Input
+                  type="number"
+                  placeholder="Enter number of years"
+                  className="pl-10"
+                  value={years}
+                  onChange={(e) => setYears(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
           <Button
@@ -130,7 +139,7 @@ const EMICalculator = () => {
                 className="p-6 backdrop-blur-sm bg-white/90 shadow-lg transition-all hover:shadow-xl"
               >
                 <h3 className="text-lg font-semibold mb-4 text-sage-dark">
-                  After {result.year} Years
+                  After {result.year} {result.year === 1 ? 'Year' : 'Years'}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -148,7 +157,7 @@ const EMICalculator = () => {
                   <div>
                     <p className="text-sm text-sage/80">Profit Made</p>
                     <p className="text-xl font-semibold text-sage">
-                      {formatCurrency(result.profitMade)}
+                      {formatCurrency(result.futurePrice - (Number(propertyPrice) + result.emiPaid))}
                     </p>
                   </div>
                 </div>
