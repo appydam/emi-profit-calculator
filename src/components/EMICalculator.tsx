@@ -259,6 +259,7 @@ const EMICalculator = () => {
                     <p className="text-xl font-semibold text-sage text-green-600">
                       {formatCurrency(result.futurePrice - result.totalSpent - result.loanBalance)}
                     </p>
+                    <p className="text-xs text-sage/60">futurePrice - (totalSpent + loanBalance)</p>
                   </div>
                 </div>
 
@@ -267,15 +268,15 @@ const EMICalculator = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                       <p className="text-sm text-sage/80">Down Payment</p>
-                      <p className="text-lg font-semibold">{formatCurrency(Number(propertyPrice) - Number(loanAmount))}</p>
+                      <p className="text-base font-semibold">{formatCurrency(Number(propertyPrice) - Number(loanAmount))}</p>
                     </div>
                     <div>
                       <p className="text-sm text-sage/80">Total Fees</p>
-                      <p className="text-lg font-semibold">{formatCurrency(Object.values(fees).reduce((a, b) => a + b, 0))}</p>
+                      <p className="text-base font-semibold">{formatCurrency(Object.values(fees).reduce((a, b) => a + b, 0))}</p>
                     </div>
                     <div>
                       <p className="text-sm text-sage/80">EMI Paid</p>
-                      <p className="text-lg font-semibold">{formatCurrency(result.emiPaid)}</p>
+                      <p className="text-base font-semibold">{formatCurrency(result.emiPaid)}</p>
                     </div>
                   </div>
                 </div>
@@ -286,7 +287,7 @@ const EMICalculator = () => {
                     <div>
                       <p className="text-sm text-sage/80">Required Monthly SIP</p>
                       <p className="text-xl font-semibold">{formatCurrency(result.monthlyInvestment)}</p>
-                      <p className="text-xs text-sage/60">Avg monthly spend on SIP where total spend over this period in sip is equal to total spend on real estate investment</p>
+                      <p className="text-xs text-sage/60">Avg monthly spend on SIP where total spend over this period in SIP is equal to total spend on real estate investment</p>
                     </div>
                     <div>
                       <p className="text-sm text-sage/80">SIP Returns ({cagr}% CAGR)</p>
