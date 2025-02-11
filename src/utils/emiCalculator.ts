@@ -51,6 +51,19 @@ export const calculateLoanDetails = (
   };
 };
 
+export const calculateSIPReturns = (
+  monthlyInvestment: number,
+  rateOfReturn: number,
+  years: number
+): number => {
+  const monthlyRate = rateOfReturn / (12 * 100);
+  const months = years * 12;
+  const amount = monthlyInvestment * 
+    ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * 
+    (1 + monthlyRate);
+  return amount;
+};
+
 export const formatCurrency = (amount: number): string => {
   const formatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
