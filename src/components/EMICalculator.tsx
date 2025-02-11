@@ -14,14 +14,30 @@ import {
   calculateSIPReturns
 } from "@/utils/emiCalculator";
 
+interface Fees {
+  gst: number;
+  registration: number;
+  stampDuty: number;
+  loanProcessing: number;
+}
+
+interface Result {
+  year: number;
+  futurePrice: number;
+  totalSpent: number;
+  sipReturns: number;
+  emiPaid: number;
+  loanBalance: number;
+}
+
 const EMICalculator = () => {
   const [propertyPrice, setPropertyPrice] = useState("");
   const [loanAmount, setLoanAmount] = useState("");
   const [interestRate, setInterestRate] = useState("");
   const [appreciationRate, setAppreciationRate] = useState("");
   const [years, setYears] = useState("");
-  const [results, setResults] = useState<any[]>([]);
-  const [fees, setFees] = useState<any>(null);
+  const [results, setResults] = useState<Result[]>([]);
+  const [fees, setFees] = useState<Fees | null>(null);
 
   const calculateResults = () => {
     const price = Number(propertyPrice);
