@@ -36,7 +36,7 @@ const EMICalculator = () => {
 
     setFees(calculatedFees);
     const loanDetails = calculateLoanDetails(loan, interest, 20, numYears);
-    const totalSpent = Number(propertyPrice) + totalFees + loanDetails.emiPaid;
+    const totalSpent = price + totalFees + loanDetails.emiPaid;
     const monthlyInvestment = totalSpent / (numYears * 12);
     
     const newResults = [{
