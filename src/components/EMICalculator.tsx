@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { PiggyBank, Home, Percent, DollarSign, Clock } from "lucide-react";
+import { PiggyBank, Home, Percent, DollarSign, Clock, IndianRupee } from "lucide-react";
 import {
   calculateEMI,
   calculatePropertyAppreciation,
@@ -79,7 +79,7 @@ const EMICalculator = () => {
     <div className="min-h-screen bg-sage-light p-6 md:p-8">
       <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-semibold text-sage-dark">Property Investment Calculator</h1>
+          <h1 className="text-3xl font-semibold text-sage-dark">How much profit you can make with short-term Real Estate Investment</h1>
           <p className="text-sage/80">Calculate your potential property investment returns</p>
         </div>
 
@@ -91,7 +91,7 @@ const EMICalculator = () => {
                 <Home className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
                 <Input
                   type="number"
-                  placeholder="Enter property price"
+                  placeholder="Enter property price (eg: 10000000)"
                   className="pl-10"
                   value={propertyPrice}
                   onChange={(e) => setPropertyPrice(e.target.value)}
@@ -102,10 +102,10 @@ const EMICalculator = () => {
             <div className="space-y-4">
               <Label className="text-sm font-medium">Loan Amount</Label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
+                <IndianRupee className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
                 <Input
                   type="number"
-                  placeholder="Enter loan amount"
+                  placeholder="Enter loan amount (eg: 8000000)"
                   className="pl-10"
                   value={loanAmount}
                   onChange={(e) => setLoanAmount(e.target.value)}
@@ -119,7 +119,7 @@ const EMICalculator = () => {
                 <Percent className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
                 <Input
                   type="number"
-                  placeholder="Enter interest rate"
+                  placeholder="Enter interest rate (eg: 9.1)"
                   className="pl-10"
                   value={interestRate}
                   onChange={(e) => setInterestRate(e.target.value)}
@@ -133,7 +133,7 @@ const EMICalculator = () => {
                 <PiggyBank className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
                 <Input
                   type="number"
-                  placeholder="Enter appreciation rate"
+                  placeholder="Enter appreciation rate (eg: 15)"
                   className="pl-10"
                   value={appreciationRate}
                   onChange={(e) => setAppreciationRate(e.target.value)}
@@ -147,7 +147,7 @@ const EMICalculator = () => {
                 <Clock className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
                 <Input
                   type="number"
-                  placeholder="Enter loan tenure"
+                  placeholder="Enter loan tenure in years (eg: 20)"
                   className="pl-10"
                   value={loanTenure}
                   onChange={(e) => setLoanTenure(e.target.value)}
@@ -161,7 +161,7 @@ const EMICalculator = () => {
                 <Clock className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
                 <Input
                   type="number"
-                  placeholder="Enter investment period"
+                  placeholder="Enter investment period in years (eg: 5)"
                   className="pl-10"
                   value={years}
                   onChange={(e) => setYears(e.target.value)}
@@ -175,7 +175,7 @@ const EMICalculator = () => {
                 <Percent className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
                 <Input
                   type="number"
-                  placeholder="Enter expected CAGR"
+                  placeholder="Enter expected CAGR (eg: 15)"
                   className="pl-10"
                   value={cagr}
                   onChange={(e) => setCagr(e.target.value)}
@@ -230,7 +230,7 @@ const EMICalculator = () => {
                 className="p-6 backdrop-blur-sm bg-white/90 shadow-lg transition-all hover:shadow-xl"
               >
                 <h3 className="text-lg font-semibold mb-4 text-sage-dark">
-                  After {result.year} {result.year === 1 ? 'Year' : 'Years'}
+                  Selling property after {result.year} {result.year === 1 ? 'Year' : 'Years'}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -242,8 +242,13 @@ const EMICalculator = () => {
                     <p className="text-xl font-semibold">{formatCurrency(result.emiPaid)}</p>
                   </div>
                   <div>
+                    <p className="text-sm text-sage/80">Per Month EMI</p>
+                    <p className="text-xl font-semibold">{formatCurrency(result.emiPaid / (result.year * 12))}</p>
+                  </div>
+                  <div>
                     <p className="text-sm text-sage/80">Loan Balance</p>
                     <p className="text-xl font-semibold">{formatCurrency(result.loanBalance)}</p>
+                    <p className="text-xs text-sage/60">Remaining Loan to be Paid to bank</p>
                   </div>
                   <div>
                     <p className="text-sm text-sage/80">Total Money Spent</p>
@@ -251,9 +256,27 @@ const EMICalculator = () => {
                   </div>
                   <div>
                     <p className="text-sm text-sage/80">Property Investment Profit</p>
-                    <p className="text-xl font-semibold text-sage">
-                      {formatCurrency(result.futurePrice - result.totalSpent)}
+                    <p className="text-xl font-semibold text-sage text-green-600">
+                      {formatCurrency(result.futurePrice - result.totalSpent - result.loanBalance)}
                     </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-sage/10">
+                  <h4 className="text-lg font-semibold mb-4 text-sage-dark">Total Spent Breakdown</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                      <p className="text-sm text-sage/80">Down Payment</p>
+                      <p className="text-lg font-semibold">{formatCurrency(Number(propertyPrice) - Number(loanAmount))}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-sage/80">Total Fees</p>
+                      <p className="text-lg font-semibold">{formatCurrency(Object.values(fees).reduce((a, b) => a + b, 0))}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-sage/80">EMI Paid</p>
+                      <p className="text-lg font-semibold">{formatCurrency(result.emiPaid)}</p>
+                    </div>
                   </div>
                 </div>
 
@@ -263,17 +286,30 @@ const EMICalculator = () => {
                     <div>
                       <p className="text-sm text-sage/80">Required Monthly SIP</p>
                       <p className="text-xl font-semibold">{formatCurrency(result.monthlyInvestment)}</p>
+                      <p className="text-xs text-sage/60">Avg monthly spend on SIP where total spend over this period in sip is equal to total spend on real estate investment</p>
                     </div>
                     <div>
                       <p className="text-sm text-sage/80">SIP Returns ({cagr}% CAGR)</p>
-                      <p className="text-xl font-semibold">{formatCurrency(result.sipReturns)}</p>
+                      <p className="text-xl font-semibold text-green-600">{formatCurrency(result.sipReturns)}</p>
                     </div>
                     <div>
                       <p className="text-sm text-sage/80">SIP vs Property Difference</p>
-                      <p className="text-xl font-semibold text-sage">
-                        {formatCurrency(result.sipReturns - (result.futurePrice - result.totalSpent))}
+                      <p
+                        className={`text-xl font-semibold ${
+                          result.sipReturns - (result.futurePrice - result.totalSpent - result.loanBalance) > 0
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {formatCurrency(result.sipReturns - (result.futurePrice - result.totalSpent - result.loanBalance))}
+                      </p>
+                      <p className="text-sm font-medium">
+                        {result.sipReturns - (result.futurePrice - result.totalSpent - result.loanBalance) > 0
+                          ? "SIP would be a better investment than Real Estate"
+                          : "Real Estate would be a better investment than SIP"}
                       </p>
                     </div>
+
                   </div>
                 </div>
               </Card>
