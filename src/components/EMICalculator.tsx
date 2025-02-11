@@ -198,19 +198,19 @@ const EMICalculator = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-sage/80">GST (5%)</p>
-                <p className="text-xl font-semibold">{formatCurrency(fees.gst)}</p>
+                <p className="text-base font-semibold">{formatCurrency(fees.gst)}</p>
               </div>
               <div>
                 <p className="text-sm text-sage/80">Registration (5%)</p>
-                <p className="text-xl font-semibold">{formatCurrency(fees.registration)}</p>
+                <p className="text-base font-semibold">{formatCurrency(fees.registration)}</p>
               </div>
               <div>
                 <p className="text-sm text-sage/80">Stamp Duty (1%)</p>
-                <p className="text-xl font-semibold">{formatCurrency(fees.stampDuty)}</p>
+                <p className="text-base font-semibold">{formatCurrency(fees.stampDuty)}</p>
               </div>
               <div>
                 <p className="text-sm text-sage/80">Loan Processing (0.5%)</p>
-                <p className="text-xl font-semibold">{formatCurrency(fees.loanProcessing)}</p>
+                <p className="text-base font-semibold">{formatCurrency(fees.loanProcessing)}</p>
               </div>
               <div className="col-span-2">
                 <p className="text-sm text-sage/80">Total Fees</p>
@@ -256,7 +256,7 @@ const EMICalculator = () => {
                   </div>
                   <div>
                     <p className="text-sm text-sage/80">Property Investment Profit</p>
-                    <p className="text-xl font-semibold text-sage text-green-600">
+                    <p className="text-xl font-semibold text-sage text-lime-600">
                       {formatCurrency(result.futurePrice - result.totalSpent - result.loanBalance)}
                     </p>
                     <p className="text-xs text-sage/60">futurePrice - (totalSpent + loanBalance)</p>
