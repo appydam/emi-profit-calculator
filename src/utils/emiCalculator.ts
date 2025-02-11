@@ -35,14 +35,14 @@ export const calculateLoanDetails = (
   const monthsPassed = currentYear * 12;
   const totalPaid = monthlyEMI * monthsPassed;
   
-  // Calculate remaining loan balance
+  // Calculate remaining loan balance using reducing balance method
   const monthlyRate = rate / (12 * 100);
   let remainingBalance = principal;
   
   for (let i = 0; i < monthsPassed; i++) {
-    const interestPortion = remainingBalance * monthlyRate;
-    const principalPortion = monthlyEMI - interestPortion;
-    remainingBalance -= principalPortion;
+    const interestForMonth = remainingBalance * monthlyRate;
+    const principalForMonth = monthlyEMI - interestForMonth;
+    remainingBalance -= principalForMonth;
   }
 
   return {

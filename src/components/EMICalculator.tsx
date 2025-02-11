@@ -36,6 +36,7 @@ const EMICalculator = () => {
   const [interestRate, setInterestRate] = useState("");
   const [appreciationRate, setAppreciationRate] = useState("");
   const [years, setYears] = useState("");
+  const [loanTenure, setLoanTenure] = useState("20");
   const [cagr, setCagr] = useState("15");
   const [results, setResults] = useState<Result[]>([]);
   const [fees, setFees] = useState<Fees | null>(null);
@@ -46,6 +47,7 @@ const EMICalculator = () => {
     const interest = Number(interestRate);
     const appreciation = Number(appreciationRate);
     const numYears = Number(years);
+    const tenure = Number(loanTenure);
     const cagrRate = Number(cagr);
     
     if (numYears <= 0) return;
@@ -55,7 +57,7 @@ const EMICalculator = () => {
     const downPayment = price - loan;
     
     setFees(calculatedFees);
-    const loanDetails = calculateLoanDetails(loan, interest, 20, numYears);
+    const loanDetails = calculateLoanDetails(loan, interest, tenure, numYears);
     const totalSpent = loanDetails.emiPaid + totalFees + downPayment;
     
     // Monthly SIP amount calculation
@@ -140,12 +142,26 @@ const EMICalculator = () => {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-sm font-medium">Number of Years</Label>
+              <Label className="text-sm font-medium">Loan Tenure (Years)</Label>
               <div className="relative">
                 <Clock className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
                 <Input
                   type="number"
-                  placeholder="Enter number of years"
+                  placeholder="Enter loan tenure"
+                  className="pl-10"
+                  value={loanTenure}
+                  onChange={(e) => setLoanTenure(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <Label className="text-sm font-medium">Investment Period (Years)</Label>
+              <div className="relative">
+                <Clock className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
+                <Input
+                  type="number"
+                  placeholder="Enter investment period"
                   className="pl-10"
                   value={years}
                   onChange={(e) => setYears(e.target.value)}
