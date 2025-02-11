@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,6 +27,7 @@ interface Result {
   sipReturns: number;
   emiPaid: number;
   loanBalance: number;
+  monthlyInvestment: number;
 }
 
 const EMICalculator = () => {
@@ -36,6 +36,7 @@ const EMICalculator = () => {
   const [interestRate, setInterestRate] = useState("");
   const [appreciationRate, setAppreciationRate] = useState("");
   const [years, setYears] = useState("");
+  const [cagr, setCagr] = useState("15");
   const [results, setResults] = useState<Result[]>([]);
   const [fees, setFees] = useState<Fees | null>(null);
 
@@ -45,21 +46,27 @@ const EMICalculator = () => {
     const interest = Number(interestRate);
     const appreciation = Number(appreciationRate);
     const numYears = Number(years);
-    const calculatedFees = calculateFees(price);
-    const totalFees = Object.values(calculatedFees).reduce((a, b) => a + b, 0);
+    const cagrRate = Number(cagr);
     
     if (numYears <= 0) return;
 
+    const calculatedFees = calculateFees(price);
+    const totalFees = Object.values(calculatedFees).reduce((a, b) => a + b, 0);
+    const downPayment = price - loan;
+    
     setFees(calculatedFees);
     const loanDetails = calculateLoanDetails(loan, interest, 20, numYears);
-    const totalSpent = price + totalFees + loanDetails.emiPaid;
+    const totalSpent = loanDetails.emiPaid + totalFees + downPayment;
+    
+    // Monthly SIP amount calculation
     const monthlyInvestment = totalSpent / (numYears * 12);
     
     const newResults = [{
       year: numYears,
       futurePrice: calculatePropertyAppreciation(price, appreciation, numYears),
       totalSpent,
-      sipReturns: calculateSIPReturns(monthlyInvestment, 15, numYears),
+      sipReturns: calculateSIPReturns(monthlyInvestment, cagrRate, numYears),
+      monthlyInvestment,
       ...loanDetails,
     }];
 
@@ -145,6 +152,20 @@ const EMICalculator = () => {
                 />
               </div>
             </div>
+
+            <div className="space-y-4">
+              <Label className="text-sm font-medium">Expected SIP CAGR (%)</Label>
+              <div className="relative">
+                <Percent className="absolute left-3 top-2.5 h-5 w-5 text-sage/50" />
+                <Input
+                  type="number"
+                  placeholder="Enter expected CAGR"
+                  className="pl-10"
+                  value={cagr}
+                  onChange={(e) => setCagr(e.target.value)}
+                />
+              </div>
+            </div>
           </div>
 
           <Button
@@ -218,11 +239,25 @@ const EMICalculator = () => {
                       {formatCurrency(result.futurePrice - result.totalSpent)}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-sm text-sage/80">Equivalent SIP Returns (15% CAGR)</p>
-                    <p className="text-xl font-semibold text-sage">
-                      {formatCurrency(result.sipReturns)}
-                    </p>
+                </div>
+
+                <div className="mt-6 pt-6 border-t border-sage/10">
+                  <h4 className="text-lg font-semibold mb-4 text-sage-dark">Compare with SIP</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-sage/80">Required Monthly SIP</p>
+                      <p className="text-xl font-semibold">{formatCurrency(result.monthlyInvestment)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-sage/80">SIP Returns ({cagr}% CAGR)</p>
+                      <p className="text-xl font-semibold">{formatCurrency(result.sipReturns)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-sage/80">SIP vs Property Difference</p>
+                      <p className="text-xl font-semibold text-sage">
+                        {formatCurrency(result.sipReturns - (result.futurePrice - result.totalSpent))}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Card>
