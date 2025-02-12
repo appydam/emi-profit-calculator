@@ -12,6 +12,8 @@ import {
   formatCurrency,
   calculateSIPReturns
 } from "@/utils/emiCalculator";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 interface Fees {
   gst: number;
@@ -31,6 +33,7 @@ interface Result {
 }
 
 const EMICalculator = () => {
+  const navigate = useNavigate();
   const [propertyPrice, setPropertyPrice] = useState("");
   const [loanAmount, setLoanAmount] = useState("");
   const [interestRate, setInterestRate] = useState("");
@@ -77,7 +80,16 @@ const EMICalculator = () => {
 
   return (
     <div className="min-h-screen bg-sage-light p-6 md:p-8">
-      <div className="max-w-4xl mx-auto space-y-8 animate-fadeIn">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <Button 
+          variant="ghost" 
+          className="mb-4 text-sage hover:text-sage-dark"
+          onClick={() => navigate('/')}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Calculators
+        </Button>
+
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-semibold text-sage-dark">How much profit you can make with short-term Real Estate Investment</h1>
           <p className="text-sage/80">Calculate your potential property investment returns</p>
