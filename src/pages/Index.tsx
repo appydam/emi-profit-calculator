@@ -1,7 +1,7 @@
 
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import { Calculator, PiggyBank, IndianRupee } from "lucide-react";
+import { Calculator, PiggyBank, IndianRupee, Home } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
