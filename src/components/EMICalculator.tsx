@@ -3,7 +3,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { PiggyBank, Home, Percent, DollarSign, Clock, IndianRupee } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PiggyBank, Home, Percent, DollarSign, Clock, IndianRupee, ArrowLeft, Github, Linkedin } from "lucide-react";
 import {
   calculateEMI,
   calculatePropertyAppreciation,
@@ -13,7 +14,21 @@ import {
   calculateSIPReturns
 } from "@/utils/emiCalculator";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+
+interface StateFees {
+  state: string;
+  stampDuty: number;
+  registration: number;
+}
+
+const stateFeesList: StateFees[] = [
+  { state: "Maharashtra", stampDuty: 6, registration: 1 },
+  { state: "Delhi", stampDuty: 6, registration: 1 },
+  { state: "Karnataka", stampDuty: 5, registration: 1 },
+  { state: "Tamil Nadu", stampDuty: 7, registration: 4 },
+  { state: "Gujarat", stampDuty: 4.9, registration: 1 },
+  // Add more states as needed
+];
 
 interface Fees {
   gst: number;
@@ -41,6 +56,7 @@ const EMICalculator = () => {
   const [years, setYears] = useState("");
   const [loanTenure, setLoanTenure] = useState("20");
   const [cagr, setCagr] = useState("15");
+  const [selectedState, setSelectedState] = useState("Maharashtra");
   const [results, setResults] = useState<Result[]>([]);
   const [fees, setFees] = useState<Fees | null>(null);
 
@@ -55,7 +71,14 @@ const EMICalculator = () => {
     
     if (numYears <= 0) return;
 
-    const calculatedFees = calculateFees(price);
+    const selectedStateFees = stateFeesList.find(s => s.state === selectedState) || stateFeesList[0];
+    const calculatedFees = {
+      gst: price * 0.05,
+      registration: price * (selectedStateFees.registration / 100),
+      stampDuty: price * (selectedStateFees.stampDuty / 100),
+      loanProcessing: price * 0.005
+    };
+
     const totalFees = Object.values(calculatedFees).reduce((a, b) => a + b, 0);
     const downPayment = price - loan;
     
@@ -63,15 +86,24 @@ const EMICalculator = () => {
     const loanDetails = calculateLoanDetails(loan, interest, tenure, numYears);
     const totalSpent = loanDetails.emiPaid + totalFees + downPayment;
     
-    // Monthly SIP amount calculation
     const monthlyInvestment = totalSpent / (numYears * 12);
-    
+    const futurePropertyValue = calculatePropertyAppreciation(price, appreciation, numYears);
+    const sipReturns = calculateSIPReturns(monthlyInvestment, cagrRate, numYears);
+
+    // Calculate taxes
+    const propertyTaxAmount = (futurePropertyValue - price) * 0.125; // 12.5% LTCG
+    const sipTaxAmount = (sipReturns - totalSpent) * 0.125; // 12.5% LTCG
+
     const newResults = [{
       year: numYears,
-      futurePrice: calculatePropertyAppreciation(price, appreciation, numYears),
+      futurePrice: futurePropertyValue,
       totalSpent,
-      sipReturns: calculateSIPReturns(monthlyInvestment, cagrRate, numYears),
+      sipReturns,
       monthlyInvestment,
+      propertyTaxAmount,
+      propertyProfitAfterTax: futurePropertyValue - price - propertyTaxAmount,
+      sipTaxAmount,
+      sipProfitAfterTax: sipReturns - totalSpent - sipTaxAmount,
       ...loanDetails,
     }];
 
@@ -194,6 +226,22 @@ const EMICalculator = () => {
                 />
               </div>
             </div>
+
+            <div className="space-y-4">
+              <Label className="text-sm font-medium">State</Label>
+              <Select value={selectedState} onValueChange={setSelectedState}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select state" />
+                </SelectTrigger>
+                <SelectContent>
+                  {stateFeesList.map((state) => (
+                    <SelectItem key={state.state} value={state.state}>
+                      {state.state}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <Button
@@ -213,11 +261,15 @@ const EMICalculator = () => {
                 <p className="text-base font-semibold">{formatCurrency(fees.gst)}</p>
               </div>
               <div>
-                <p className="text-sm text-sage/80">Registration (5%)</p>
+                <p className="text-sm text-sage/80">
+                  Registration ({stateFeesList.find(s => s.state === selectedState)?.registration}%)
+                </p>
                 <p className="text-base font-semibold">{formatCurrency(fees.registration)}</p>
               </div>
               <div>
-                <p className="text-sm text-sage/80">Stamp Duty (1%)</p>
+                <p className="text-sm text-sage/80">
+                  Stamp Duty ({stateFeesList.find(s => s.state === selectedState)?.stampDuty}%)
+                </p>
                 <p className="text-base font-semibold">{formatCurrency(fees.stampDuty)}</p>
               </div>
               <div>
@@ -329,6 +381,27 @@ const EMICalculator = () => {
             ))}
           </div>
         )}
+
+        <footer className="py-6 border-t border-sage/10">
+          <div className="flex justify-center space-x-4">
+            <a 
+              href="https://github.com/appydam" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-sage hover:text-sage-dark transition-colors"
+            >
+              <Github className="h-6 w-6" />
+            </a>
+            <a 
+              href="https://www.linkedin.com/in/arpitdhamija/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-sage hover:text-sage-dark transition-colors"
+            >
+              <Linkedin className="h-6 w-6" />
+            </a>
+          </div>
+        </footer>
       </div>
     </div>
   );
