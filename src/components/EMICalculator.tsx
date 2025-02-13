@@ -22,12 +22,35 @@ interface StateFees {
 }
 
 const stateFeesList: StateFees[] = [
-  { state: "Maharashtra", stampDuty: 6, registration: 1 },
-  { state: "Delhi", stampDuty: 6, registration: 1 },
+  { state: "Andhra Pradesh", stampDuty: 5, registration: 0.5 },
+  { state: "Arunachal Pradesh", stampDuty: 6, registration: 1 },
+  { state: "Assam", stampDuty: 8.25, registration: 0 },
+  { state: "Bihar", stampDuty: 6, registration: 2 },
+  { state: "Chhattisgarh", stampDuty: 5, registration: 4 },
+  { state: "Goa", stampDuty: 5, registration: 3 },
+  { state: "Gujarat", stampDuty: 4.90, registration: 1 },
+  { state: "Haryana", stampDuty: 7, registration: 0 },
+  { state: "Himachal Pradesh", stampDuty: 5, registration: 6 },
+  { state: "Jammu and Kashmir", stampDuty: 5, registration: 0 },
+  { state: "Jharkhand", stampDuty: 4, registration: 3 },
   { state: "Karnataka", stampDuty: 5, registration: 1 },
+  { state: "Kerala", stampDuty: 8, registration: 2 },
+  { state: "Madhya Pradesh", stampDuty: 7.50, registration: 3 },
+  { state: "Maharashtra", stampDuty: 6, registration: 1 },
+  { state: "Manipur", stampDuty: 7, registration: 3 },
+  { state: "Meghalaya", stampDuty: 9.90, registration: 0 },
+  { state: "Mizoram", stampDuty: 9, registration: 0 },
+  { state: "Nagaland", stampDuty: 8.25, registration: 0 },
+  { state: "Odisha", stampDuty: 5, registration: 2 },
+  { state: "Punjab", stampDuty: 7, registration: 1 },
+  { state: "Rajasthan", stampDuty: 5, registration: 1 },
+  { state: "Sikkim", stampDuty: 5, registration: 0 },
   { state: "Tamil Nadu", stampDuty: 7, registration: 4 },
-  { state: "Gujarat", stampDuty: 4.9, registration: 1 },
-  // Add more states as needed
+  { state: "Telangana", stampDuty: 5, registration: 0.5 },
+  { state: "Tripura", stampDuty: 5, registration: 0 },
+  { state: "Uttar Pradesh", stampDuty: 7, registration: 1 },
+  { state: "Uttarakhand", stampDuty: 5, registration: 2 },
+  { state: "West Bengal", stampDuty: 7, registration: 1 }
 ];
 
 interface Fees {
